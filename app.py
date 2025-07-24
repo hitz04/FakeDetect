@@ -6,20 +6,17 @@ import numpy as np
 
 # Load model and vectorizer
 try:
-    with open("model.pkl", "rb") as f:
+    with open("mmodel (1).pkl", "rb") as f:
         model = pickle.load(f)
     print("✅ Model loaded!")
 
-    with open("vectorizer.pkl", "rb") as f:
+    with open("vectorizer (1).pkl", "rb") as f:
         vectorizer = pickle.load(f)
     print("✅ Vectorizer loaded!")
 
 except Exception as e:
     print("❌ Failed to load model or vectorizer:", e)
 
-
-with open("vectorizer.pkl", "rb") as f:
-    vectorizer = pickle.load(f)
 
 # App title
 st.set_page_config(page_title="Fake News Detector", page_icon="📰")
