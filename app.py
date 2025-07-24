@@ -1,27 +1,31 @@
-# app.py
-
 import streamlit as st
 import pickle
 import numpy as np
+import os
+
+# Set page config
+st.set_page_config(page_title="Fake News Detector", page_icon="📰")
+
+# Title and intro
+st.title("📰 Fake News Detector")
+st.markdown("Paste a news article or story below to check if it's **Fake** or **Real**.")
+
+# Show files to debug (optional)
+st.text(f"📁 Files in current directory: {os.listdir()}")
 
 # Load model and vectorizer
 try:
-    with open("mmodel (1).pkl", "rb") as f:
+    with open("model (1).pkl", "rb") as f:
         model = pickle.load(f)
-    print("✅ Model loaded!")
+    st.success("✅ Model loaded!")
 
     with open("vectorizer (1).pkl", "rb") as f:
         vectorizer = pickle.load(f)
-    print("✅ Vectorizer loaded!")
+    st.success("✅ Vectorizer loaded!")
 
 except Exception as e:
-    print("❌ Failed to load model or vectorizer:", e)
-
-
-# App title
-st.set_page_config(page_title="Fake News Detector", page_icon="📰")
-st.title("📰 Fake News Detector")
-st.markdown("Paste a news article or story below to check if it's **Fake** or **Real**.")
+    st.error(f"❌ Failed to load model or vectorizer: {e}")
+    st.stop()  # Halt app if loading fails
 
 # Text input
 user_input = st.text_area("Enter News Article Text", height=250, placeholder="Paste your news article here...")
@@ -35,9 +39,9 @@ if st.button("Predict"):
             X_new = vectorizer.transform([user_input])
             prediction = model.predict(X_new)[0]
             confidence = model.predict_proba(X_new).max()
+
             label = "🟢 Real" if prediction == 1 else "🔴 Fake"
             st.success(f"Prediction: {label}")
             st.info(f"Confidence: {confidence:.2%}")
         except Exception as e:
-            st.error(f"Something went wrong during prediction: {e}")
-
+            st.error(f"❌ Something went wrong during prediction: {e}")
