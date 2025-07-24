@@ -28,13 +28,16 @@ user_input = st.text_area("Enter News Article Text", height=250, placeholder="Pa
 
 # Predict button
 if st.button("Predict"):
-    if user_input.strip() == "":
+    if not user_input.strip():
         st.warning("Please enter some text before predicting.")
     else:
-        X_new = vectorizer.transform([user_input])
-        prediction = model.predict(X_new)[0]
-        confidence = model.predict_proba(X_new).max()
-        label = "🟢 Real" if prediction == 1 else "🔴 Fake"
+        try:
+            X_new = vectorizer.transform([user_input])
+            prediction = model.predict(X_new)[0]
+            confidence = model.predict_proba(X_new).max()
+            label = "🟢 Real" if prediction == 1 else "🔴 Fake"
+            st.success(f"Prediction: {label}")
+            st.info(f"Confidence: {confidence:.2%}")
+        except Exception as e:
+            st.error(f"Something went wrong during prediction: {e}")
 
-        st.subheader(f"Prediction: {label}")
-        st.write(f"Confidence: **{confidence:.2%}**")
